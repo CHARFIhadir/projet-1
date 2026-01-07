@@ -13,7 +13,7 @@ app = Flask(__name__)
 # =========================================================
 # MongoDB Connection (NO flask-pymongo)
 # =========================================================
-MONGO_URI = "mongodb+srv://db_user:hadirchamta@cluster0.cf0lyt3.mongodb.net/shop_inventory"
+MONGO_URI = "mongodb+srv://db_user:mdp2@cluster0.cf0lyt3.mongodb.net/shop_inventory"
 client = MongoClient(MONGO_URI)
 
 db = client.shop_inventory
