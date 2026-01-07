@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block content %}
+<h4 class="center"><i class="material-icons prefix">insert_chart</i> Results</h4>
+<div class="row equal-height-grid">
+	<div class="col s12">
+		<div class="card">
+			<div class="card-content ">
+				<div class="nav-wrapper">
+					<form action="{{url_for('search_products')}}" method="POST">
+						<div class="input-field">
+							<input id="search" type="search" name="input_search" placeholder="Find a Product.." required >
+							<label class="label-icon" for="search"><i class="material-icons">search</i></label>
+							<i class="material-icons">close</i>
+						</div>
+					</form>
+				</div> 
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row equal-height-grid">	
+	<div class="col s12">
+		<div class="card">
+			<div class="table_overflow">
+				<table id="productsTable" class="striped">
+
+<!-- This table makes use of some onClick events created in the static/js folder. The functions called have "n" as an input parameter. This allows their function to be called multiple times individually
+by inserting a number into each parenthesis. The numbers differ due to the table structure. The table header reads per cell horizontally, and therfore omits the 0 form the group, as options does not require
+a sorting arrow. The sort function reads each row with the onClick function in it. It ignores those without, hence the sequence.
+ -->
+					<thead>
+						<tr>
+							<!--empty cell for structural purposes-->
+							<th>
+								Options
+							</th>
+							<th class="headerSortUp" onclick="sortTable(0), arrow(1)">Name</th>
+							<th>Desciption</th>
+							<th class="headerSortUp" onclick="sortTable(1), arrow(3)">Manufacturer</th>
+							<th class="headerSortUp" onclick="sortTable(2), arrow(4)">Supplier</th>
+							<th class="headerSortUp" onclick="sortTable(3), arrow(5)">Category</th>
+							<th class="headerSortUp" onclick="sortTable(4), arrow(6)">Price</th>
+							<th class="headerSortUp" onclick="sortTable(5), arrow(7)">Quantity</th>
+							<th class="headerSortUp" onclick="sortTable(6), arrow(8)">Status</th>
+							<th>EAN</th>
+						</tr>
+					</thead>
+
+<!-- Iterating through the search results, much in the same way as the products page displays all products by using a find() function in mongoDB, each field form the products collection is put on
+display, if any or all the matching seach terms are contained within. -->
+					{% for product in results %}
+					<tbody>
+						<tr>
+							<td>
+								<a class="btn-floating btn-medium waves-effect waves-light modal-trigger amber" href="{{url_for('edit_product', product_id=product._id)}}"><i class="material-icons right">edit</i></a>
+							</td>
+							<td>{{product.product_name}}</td>
+							<td>{{product.product_description}}</td>
+							<td>{{product.manufacturer_name}}</td>
+							<td>{{product.supplier_name}}</td>
+							<td>{{product.category_name}}</td>
+							<td>€{{product.product_price}}</td>
+							<td>{{product.product_quantity}}</td>
+							<td>{{product.product_status}}</td>
+							<td>{{product.product_EAN}}</td>
+						</tr>
+					</tbody>	
+					{% endfor %}
+				</table>
+			</div>	
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+
+

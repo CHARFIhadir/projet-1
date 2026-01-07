@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.css">
+    <link rel="stylesheet" href="/static/css/style.css" type="text/css" />
+    <link rel="shortcut icon" href="static/images/WM_Favicon.png" type="image/x-icon">
+
+    <title>Warehouse|Manager</title>
+</head>
+<body>
+    <header>
+        <div class="row">
+            <nav class="red">
+                <div class="nav-wrapper">
+                    <!-- The href in this case makes use of Jinja templating to locate the required html file from a function in app.py. In this case, "get_dashboard"-->
+
+                    <a href="{{url_for('get_dashboard')}}" class="brand-logo center">Warehouse<i class="material-icons" id="nav-icon-visible">store_mall_directory</i></a>
+                    <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                    <ul id="slide-out" class="sidenav">
+                        <li class="sidenav-header"><a class = "sidenav-header" href=""><i class="material-icons prefix" id="sidenav-header-logo">account_circle</i>Admin</a></li>
+                        <!-- Within this sidenav, more Jinja is used to locate other html files located in the templates directory. The app.py function calls them using the function names below -->
+
+                        <li><a href="{{url_for('get_dashboard')}}"><i class="material-icons prefix">show_chart</i>Dashboard</a></li>
+                        <li><a href="{{url_for('get_products')}}"><i class="material-icons prefix">assignment</i>Products</a></li>
+                        <li><a href="{{url_for('get_categories')}}"><i class="material-icons prefix">assessment</i>Categories</a></li>
+                        <li><a href="{{url_for('add_product')}}"><i class="material-icons prefix">create</i>Add Product</a></li>
+                        <li><a href="{{url_for('add_category')}}"><i class="material-icons prefix">create</i>Add Category</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <div class="container">
+        <!-- These jinja lines allow other html pages to makes use of everything on this page above and below these lines. Thi saves time in development-->
+
+        {% block content %}
+        {% endblock %}
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="/static/js/materialize_initialize_script.js"></script>
+    <script src="/static/js/sort.js"></script>
+    <script src="/static/js/arrow.js"></script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- the naming convention for each input field is associated with the mongoDB collection for adding a new product. Required is at the end of each input, this prevents adding a blank product-->
+
+<h4 class="center"><i class="material-icons prefix">create</i>Add Product</h4>
+<div class="row equal-height-grid">	
+	<div class="row">
+		<form action="{{url_for('insert_product')}}" method="POST" class="col s12">
+			<div class="row">
+				<div class="row">
+					<div class="input-field col s12">
+						<i class="material-icons prefix">label</i>
+						<input id="product_name" name="product_name" type="text" class="validate" required>
+						<label for="icon_prefix">Product name</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="input-field col s12">
+						<i class="material-icons prefix">subject</i>
+						<textarea id="product_description" name="product_description" class="materialize-textarea" required></textarea>
+						<label for="icon_telephone">Description</label>
+					</div>
+				</div>
+				<div class="row equal-height-grid">
+					<div class="input-field col l4 s12">
+						<i class="material-icons prefix">gavel</i>
+
+<!-- a drop down menu is created containing the full list of manufacuter names, for ease of selection. -->
+						<select id="manufacturer_name" name="manufacturer_name" required>
+							<option value="" disabled selected>Choose Manufacturer</option>
+							{% for brand in manufacturers %}
+							<option value="{{brand.manufacturer_name}}">{{brand.manufacturer_name}}</option>
+							{% endfor %}
+						</select>
+						<label for="icon_prefix">Manufacturer</label>
+					</div>				
+					<div class="input-field col l4 s12">
+						<i class="material-icons prefix">local_shipping</i>	
+						<select id="supplier_name" name="supplier_name" required>
+							<option value="" disabled selected>Choose Supplier</option>
+							{% for supply in suppliers %}
+							<option value="{{supply.supplier_name}}">{{supply.supplier_name}}</option>
+							{% endfor %}
+						</select>
+						<label for="icon_prefix">Supplier</label>
+					</div>				
+					<div class="input-field col l4 s12">
+						<i class="material-icons prefix">poll</i>
+						<select id="category_name" name="category_name" required>
+							<option value="" disabled selected>Choose Category</option>
+							{% for cat in categories %}
+							<option value="{{cat.category_name}}">{{cat.category_name}}</option>
+							{% endfor %}
+						</select>
+						<label for="icon_prefix">Category</label>
+					</div>	
+				</div>
+				<div class="row equal-height-grid">
+					<div class="input-field col l6 s12">
+						<i class="material-icons prefix">euro_symbol</i>
+						<input id="product_price" name="product_price" type="number" class="validate" required>
+						<label for="icon_prefix">Price</label>
+					</div>
+					<div class="input-field col l6 s12">
+						<i class="material-icons prefix">import_export</i>
+						<input id="product_quantity" name="product_quantity" type="number" class="validate" required>
+						<label for="icon_prefix">Quantity</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="input-field col s12">
+						<i class="material-icons prefix">priority_high</i>
+						<input id="product_EAN" name="product_EAN" type="text" class="validate" required>
+						<label for="icon_prefix">EAN</label>
+					</div>
+				</div>
+				<div class="row equal-height-grid">
+					<div class="input-field switch col l6 s12" id="bottom-switch">
+						<i class="material-icons prefix">contact_support</i>
+						<label>
+							<input id="product_status" name="product_status" type="checkbox" value="Active" required>
+							<span class="lever"></span><span>Active</span>
+						</label>
+					</div>
+					<div class="input-field switch col l6 s12">
+						<button class="btn waves-effect waves-light" type="submit" name="action">Add Product
+							<i class="material-icons right">playlist_add</i>
+						</button>
+					</div>
+				</div>
+			</div>							
+		</form>
+	</div>
+</div>
+
+{% endblock %}

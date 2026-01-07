@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- this line "extends" from base.html, and injects this content between the block content quotes -->
+<h4 class="center"><i class="material-icons prefix">show_chart</i> Dashboard</h4>
+<div class="row equal-height-grid">
+	<div class="col s12">
+		<div class="card">
+			<div class="card-content">
+				<div class="nav-wrapper">
+
+					<!-- This form creates the primary input for the serach function in the app.py file. The input name of "input_field" is fed into the search function, split into single words and searched. -->
+					<form action="{{url_for('search_products')}}" method="POST">
+						<div class="input-field">
+							<input id="search" type="search" name="input_search" placeholder="Find a Product.." require>
+							<label class="label-icon" for="search"><i class="material-icons">search</i></label>
+							<i class="material-icons">close</i>
+						</div>
+					</form>
+				</div>    
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row equal-height-grid">
+	<div class="col l6 s12">
+		<div class="card">
+			<div class="card-toolbar">
+				<div><a href="{{url_for('get_products')}}" class="card-title"><i class="material-icons prefix card-title-icon">assignment</i> Products</a></div>
+				<div class="card-toolbar-actions">
+					<div class="dropdown-trigger" data-target="products-dropdown">
+						<i class="material-icons card-title-dropdown-icon">more_vert</i>
+					</div>
+					<ul id="products-dropdown" class="dropdown-content" tabindex="0" style="">
+						<li tabindex="0"><a href="{{url_for('add_product')}}">Add new</a></li>
+					</ul>
+				</div>
+			</div>
+
+			<!-- Chart.js - This section creates the required div sections for injectin the chart.js information and displays. One is for the chart, one is for the legend. -->
+			<div class="card-content">
+				<div class="row row-vertical-center no-margin">
+					<div class="col s12 m4 l12">
+						<canvas id="pieChart" width="150" style="display: block; width: 150px; height: 75px;" height="75" class="chartjs-render-monitor"></canvas>
+					</div>
+					<div class="col s12 m8 l12">
+						<div id="pie-legend"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col l6 s12">
+		<div class="card">
+			<div class="card-toolbar">
+				<div><a href="{{url_for('get_categories')}}" class="card-title"><i class="material-icons prefix card-title-icon">assessment</i> Categories</a></div>
+				<div class="card-toolbar-actions">
+					<div class="dropdown-trigger" data-target="products-dropdown">
+						<i class="material-icons card-title-dropdown-icon">more_vert</i>
+					</div>
+					<ul id="products-dropdown" class="dropdown-content" tabindex="0">
+						<li tabindex="0"><a href="{{url_for('add_category')}}">Add new</a></li>
+					</ul>
+				</div>
+			</div>
+
+			<!-- Chart.js - This section creates the required div sections for injectin the chart.js information and displays. One is for the chart, one is for the legend. -->
+			<div class="card-content">
+				<div class="row row-vertical-center no-margin">
+					<div class="col s12 m4 l12">
+						<canvas id="doughnutChart" width="150" style="display: block; width: 150px; height: 75px;" height="75" class="chartjs-render-monitor"></canvas>
+					</div>
+					<div class="col s12 m8 l12">
+						<div id="doughnut-legend">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Inline javascript charts. required for using jinja template shorthand -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.js"></script>
+<script>
+
+	/* custom legend onclick function for use with <ul> elemnents */
+	function legendClickCallback(event){
+
+		/* checks for an event */
+		event = event || window.event;
+
+		/* creats a variable associated with the event in general, or an event on the source target */
+		var target = event.target || event.srcElement;
+
+		/* sets the target name to <ul> */
+		while(target.nodeName !== 'UL'){
+			target = target.parentElement;
+		}
+
+		/* this section checks for the chartID, and all chart label elemnts within the legend.  */
+		var parent = target.parentElement;
+		var chartId = parseInt(parent.classList[0].split("-")[0], 10);
+		var chart = Chart.instances[chartId];
+		var index = Array.prototype.slice.call(parent.children).indexOf(target);
+
+		chart.legend.options.onClick.call(chart, event, chart.legend.legendItems[index]);
+	}
+
+</script>
+<script>
+
+	/*Creates a random colour for each element of a selected chart type. It adds three defined and randomnly generated numbers within the RGBA range. Opacity is set at 0.5*/
+	var randomColor = function () { 
+		var r = Math.floor(Math.random() * 255);
+		var g = Math.floor(Math.random() * 255);
+		var b = Math.floor(Math.random() * 255);
+		return "rgba(" + r + "," + g + "," + b + ", 0.5)";
+	};
+
+</script>
+<script>
+
+	/* PRODUCTS CHART DISPLAY USING DATA FROM MONGODB */
+	var ctx = document.getElementById('pieChart').getContext('2d');
+	var pieChart = new Chart(ctx, {
+		type: 'pie',
+		data: {
+
+			/* This jinja loop cycles through all product names in the pre defined "bar_product". This is defined in the app.py function as: "mongo.db.product.find()" */
+			labels: [{% for product in bar_product %}
+			"{{product.product_name}}",
+			{% endfor %}],
+			datasets: [{
+
+				/* This loop outputs all product quantites in the products document */
+				label: '{{bar_name}}',
+				data: [{% for product in bar_quantity %}
+				"{{product.product_quantity}}",
+				{% endfor %}],
+
+				/* This loop uses the serach function for mongoDB to apply a random colour to each segment of the chart */
+				backgroundColor: [{% for colour in bar_colour %}
+				randomColor(),
+				{% endfor %}],
+			}]
+		},
+		options: {
+			responsive: true,
+
+			/* The legend display is set to false. This allows the legend to be exported toa different div apart from the chart div in the above html. */
+			legend: {
+				display: false
+			},
+
+			/* The callback function injects html generated by interating through the chart labels and data. */
+			legendCallback: function(chart) {
+				var text = [];
+				text.push('<div class="' + chart.id + '-legend">');
+				for (var i = 0; i < chart.data.datasets[0].data.length; i++) {
+					text.push('<ul><span class="legend-button" style="background-color:' + chart.data.datasets[0].backgroundColor[i] + '">');
+					if (chart.data.labels[i]) {
+						var labels = chart.data.labels[i];
+						text.push(labels);
+					}
+					text.push('</span><span class="product_quantity">' + chart.data.datasets[0].data[i] + '</span></ul>');
+				}
+				text.push('</div>');
+				return text.join("");
+			},
+
+		}
+	});
+
+	/* get the legend container by its ID, injet sthe content. */
+	var pieLegendContainer = document.getElementById("pie-legend");
+
+	pieLegendContainer.innerHTML = pieChart.generateLegend();
+
+	/* interates through the legend items and assigns the default click function to each one. */ 
+	var legendItems = pieLegendContainer.getElementsByTagName('ul');
+	for (var i = 0; i < legendItems.length; i += 1) {
+		legendItems[i].addEventListener("click", legendClickCallback, true);
+	}
+
+</script>
+<script>
+
+	/* CATEGORIES CHART DISPLAY USING DATA FROM MONGODB */
+	var ctx = document.getElementById('doughnutChart').getContext('2d');
+	var doughnutChart = new Chart(ctx, {
+		type: 'doughnut',
+		data: {
+			labels: [{% for name in doughnut_category %}
+			"{{name.category_name}} - {{name.manufacturer_name}}",
+			{% endfor %}],
+			datasets: [{
+				label: '{{doughnut_name}}',
+				data: [{% for quantity in doughnut_quantity %}
+				"{{quantity.product_quantity}}",
+				{% endfor %}],
+				backgroundColor: [{% for colour in doughnut_colour %}
+				randomColor(),
+				{% endfor %}],
+			}]
+		},
+		options: {
+			responsive: true,
+			animation: {
+				animateScale: true,
+				animateRotate: true
+			},
+			legend: {
+				display: false,
+			},
+			legendCallback: function(chart) {
+				var text = [];
+				text.push('<div class="' + chart.id + '-legend">');
+				for (var i = 0; i < chart.data.datasets[0].data.length; i++) {
+					text.push('<ul><span class="legend-button" style="background-color:' + chart.data.datasets[0].backgroundColor[i] + '">');
+
+					if (chart.data.labels[i]) {
+						var labels = chart.data.labels[i];
+						text.push(labels);
+					}	
+
+					text.push('</span><span class="product_quantity">' + chart.data.datasets[0].data[i] + '</span></ul>');
+				}
+				text.push('</div>');
+				return text.join("");	
+
+			},
+		}
+	});
+
+	var doughnutLegendContainer = document.getElementById("doughnut-legend");
+
+	doughnutLegendContainer.innerHTML = doughnutChart.generateLegend();
+
+	var legendItems = doughnutLegendContainer.getElementsByTagName('ul');
+	for (var i = 0; i < legendItems.length; i += 1) {
+		legendItems[i].addEventListener("click", legendClickCallback, true);
+	}
+</script>
+{% endblock %}

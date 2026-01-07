@@ -1,0 +1,148 @@
+/* some additions to the default styling of Materialize. */
+
+/* table and span item styling. all span items are functional on this webapp */
+th>span{
+	display:none;
+}
+
+span:after{
+	text-decoration: line-through;
+	cursor: pointer;
+}
+
+span:hover{
+	cursor: pointer;
+}
+thead:hover{
+	cursor: pointer;
+}
+
+/* card and nav styling */
+#nav-icon-visible{
+	font-size: 2.1rem;
+}
+
+#sidenav-header-logo{
+	line-height: 68px;
+}
+
+.sidenav .sidenav-header{
+	font-size: 24px;
+	height: 64px;
+	line-height: 64px;
+}
+
+.card .card-toolbar {
+	display:flex;
+	padding:24px;
+	justify-content:space-between;
+}
+
+.card-title-icon{
+	vertical-align: -4px;
+}
+
+.card-title-dropdown-icon{
+	vertical-align: -14px;
+}
+
+.card .product_quantity{
+	float: right;
+}
+
+#add-product-card{
+	padding:8.5px 0;
+}
+
+/* buttons */
+.btn {
+	float:left;
+	width: 100%;
+}
+
+.legend-button{
+	padding: 6px 6px; 
+	border-radius:13px; 
+}
+
+#bottom-switch{
+	padding-bottom: 70px;
+}
+
+#button_padding{
+	margin-bottom:0;
+}
+
+#modal-button{
+	float:none;
+	width:100%;
+	margin-bottom: 15px;
+}
+
+#add-product-button{
+	float:none;
+}
+
+/* category styling */
+.category-header{
+	margin-left: 10px;
+}
+
+.category-edit{
+	margin-left: 5px;
+}
+
+/* table sort arrow styling */
+.headerSortDown:after,
+.headerSortUp:after {
+	content: ' ';
+	font-size: 1px;
+	position: relative;
+	left: 2px;
+	border: 8px solid transparent;
+}
+
+.headerSortDown:after {
+	top: -1px;
+	border-top-color: silver;
+}
+
+.headerSortUp:after {
+	bottom: 10px;
+	border-bottom-color: silver;
+}
+
+.headerSortDown,
+.headerSortUp {
+	padding-right: 10px;
+}
+
+.table_overflow{
+	overflow-y:auto;
+	overflow-x:auto;	
+}
+
+/* specific media queries  */
+@media only screen and (min-width: 993px) {
+	nav a.sidenav-trigger {
+		display:inline;
+	}
+	.btn {
+		float:right;
+		margin-top: 0;
+	}
+}
+
+@media only screen and (min-width: 1570px) {
+	#modal-button{
+		float:none;
+		width:33%;
+	}
+}
+
+@media only screen and (max-width: 379px){
+	#nav-icon-visible{
+		display: none;
+	}
+
+}

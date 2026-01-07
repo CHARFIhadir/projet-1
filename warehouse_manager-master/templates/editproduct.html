@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- this form requests access to a single product in the collection for editing. Fields are populaged with existing data by cross checking the field name with the loop iteration name -->
+<h4 class="center"><i class="material-icons prefix">create</i>Edit Product</h4>
+<div class="row equal-height-grid">	
+	<div class="row">
+		<form action="{{url_for('update_product', product_id=product._id)}}" method="POST" class="col s12">
+			<div class="row">
+				<div class="row">
+					<div class="input-field col s12">
+						<i class="material-icons prefix">label</i>
+						<input id="product_name" name="product_name" type="text" class="validate" value="{{product.product_name}}" required>
+						<label for="icon_prefix">Product name</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="input-field col s12">
+						<i class="material-icons prefix">subject</i>
+						<textarea id="product_description" name="product_description" class="materialize-textarea" required>{{product.product_description}}</textarea>
+						<label for="icon_telephone">Description</label>
+					</div>
+				</div>
+
+				<div class="row equal-height-grid">
+					<div class="input-field col l4 s12">
+						<i class="material-icons prefix">gavel</i>
+						<select id="manufacturer_name" name="manufacturer_name" required>
+							<option value="" disabled selected>Choose Manufacturer</option>
+							{% for brand in manufacturers %}
+							{% if brand.manufacturer_name == product.manufacturer_name %}
+							<option value="{{brand.manufacturer_name}}" selected >{{brand.manufacturer_name}}</option>
+							{% else %}
+							<option value="{{brand.manufacturer_name}}">{{brand.manufacturer_name}}</option>
+							{% endif %}
+							{% endfor %}	
+						</select>
+						<label for="icon_prefix">Manufacturer</label>
+					</div>				
+
+					<div class="input-field col l4 s12">
+						<i class="material-icons prefix">local_shipping</i>	
+						<select id="supplier_name" name="supplier_name" required>
+							<option value="" disabled selected>Choose Supplier</option>
+							{% for supply in suppliers %}
+							{% if supply.supplier_name == product.supplier_name %}
+							<option value="{{supply.supplier_name}}" selected>{{supply.supplier_name}}</option>
+							{% else %}
+							<option value="{{supply.supplier_name}}">{{supply.supplier_name}}</option>
+							{% endif %}
+							{% endfor %}
+						</select>
+						<label for="icon_prefix">Supplier</label>
+					</div>				
+					<div class="input-field col l4 s12">
+						<i class="material-icons prefix">poll</i>
+						<select id="category_name" name="category_name" required>
+							<option value="" disabled selected>Choose Category</option>
+							{% for cat in categories %}
+							{% if cat.category_name == product.category_name %}
+							<option value="{{cat.category_name}}" selected>{{cat.category_name}}</option>
+							{% else %}
+							<option value="{{cat.category_name}}">{{cat.category_name}}</option>
+							{% endif %}
+							{% endfor %}
+						</select>
+						<label for="icon_prefix">Category</label>
+					</div>	
+				</div>
+
+				<div class="row equal-height-grid">
+					<div class="input-field col l6 s12">
+						<i class="material-icons prefix">euro_symbol</i>
+						<input id="product_price" name="product_price" type="number" class="validate" value="{{product.product_price}}" required>
+						<label for="icon_prefix">Price</label>
+					</div>
+
+					<div class="input-field col l6 s12">
+						<i class="material-icons prefix">import_export</i>
+						<input id="product_quantity" name="product_quantity" type="number" class="validate" value="{{product.product_quantity}}" required>
+						<label for="icon_prefix">Quantity</label>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="input-field col l6 s12">
+						<i class="material-icons prefix">priority_high</i>
+						<input id="product_EAN" name="product_EAN" type="text" class="validate" value="{{product.product_EAN}}" required>
+						<label for="icon_prefix">EAN</label>
+					</div>
+					<div class="input-field switch col l6 s12" id="bottom-switch">
+						<i class="material-icons prefix">contact_support</i>
+						<label>
+
+<!-- Procuct can not be created without an active status -->
+							{% if product.product_status %}
+							<input id="product_status" name="product_status" type="checkbox" value="Active" checked required>
+							{% else %}
+							<input id="product_status" name="product_status" type="checkbox" value="Inactive" required>
+							{% endif %}
+							<span class="lever"></span>
+							Active
+						</label>
+					</div>
+				</div>
+
+				<div class="row equal-height-grid" id="button_padding">
+					<div class="input-field switch col s12">
+						<button class="btn waves-effect waves-light" type="submit" name="action">Update
+							<i class="material-icons right">playlist_add</i>
+						</button>
+					</div>	
+				</div>
+			</div>							
+		</form>
+	</div>
+
+<!-- calls the delete function from the app.py file. Removes a dictionary item form mongoDB -->
+	<div class="row equal-height-grid" id="button_padding">
+		<form action="{{url_for('delete_product', product_id=product._id)}}" method="POST">
+			<div>
+				<button class="btn waves-effect waves-light red" type="submit" name="action">Delete
+					<i class="material-icons right">delete</i>
+				</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<!-- jQuery must be called on this page for the fields to be filled with data stored in mongoDB -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+{% endblock %}
